@@ -1,0 +1,48 @@
+# Documentation files
+README.md
+DEPLOYMENT.md
+*.md
+
+# Development files
+.env.local
+.env.development
+.env.example
+.env.production.template
+
+# SQLite database (dev only)
+prisma/dev.db
+prisma/dev.db-journal
+
+# Task Master files
+.taskmaster/
+
+# Test files
+test-oauth.spec.ts
+**/*.test.ts
+**/*.test.js
+**/*.spec.ts
+**/*.spec.js
+
+# UI agent files
+ui-agent/
+
+# Development tools
+.vscode/
+.cursor/
+.zed/
+
+# Package files
+package 2.json
+pnpm-lock.yaml
+
+# Cache directories
+.next/cache/
+node_modules/.cache/
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp

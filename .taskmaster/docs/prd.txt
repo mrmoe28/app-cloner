@@ -1,0 +1,173 @@
+<context>
+# Overview  
+App Cloner is a comprehensive web application that allows users to analyze, clone, and recreate existing applications. The platform provides AI-powered analysis of application screenshots, generates detailed technical specifications, and offers tools for recreating applications with modern web technologies. This tool serves developers, designers, and product managers who want to understand existing applications or create similar ones efficiently.
+
+# Core Features  
+## Application Analysis
+- Screenshot upload and analysis using AI vision
+- Automatic detection of UI components, layouts, and design patterns
+- Generation of detailed technical specifications
+- Component hierarchy and structure analysis
+
+## Code Generation
+- Automated code generation based on analysis results
+- Support for Next.js, React, and TypeScript
+- Integration with modern UI libraries (Tailwind CSS, shadcn/ui)
+- Responsive design implementation
+
+## Project Management
+- User authentication and project organization
+- Dashboard for managing multiple analysis projects
+- Export capabilities for generated specifications
+- Collaboration features for team workflows
+
+## UI Agent System
+- Automated application testing and analysis
+- Accessibility auditing and recommendations
+- Visual regression testing
+- Performance analysis and optimization suggestions
+
+# User Experience  
+## Primary User Personas
+- **Developers**: Need to understand existing applications and generate code quickly
+- **Designers**: Want to analyze UI patterns and recreate designs
+- **Product Managers**: Need to document and analyze competitor applications
+
+## Key User Flows
+1. **Upload & Analyze**: User uploads application screenshots → AI analyzes components → Generates detailed report
+2. **Generate Code**: User reviews analysis → Selects components → Generates Next.js/React code
+3. **Project Management**: User creates project → Manages multiple analyses → Exports results
+
+## UI/UX Considerations
+- Clean, modern interface with intuitive navigation
+- Real-time analysis feedback and progress indicators
+- Responsive design for desktop and mobile usage
+- Accessible design following WCAG guidelines
+</context>
+<PRD>
+# Technical Architecture  
+## System Components
+- **Frontend**: Next.js 15 with App Router, React 19, TypeScript
+- **Backend**: Next.js API routes with Prisma ORM
+- **Database**: SQLite (development) / PostgreSQL (production)
+- **Authentication**: NextAuth.js with multiple providers
+- **AI Integration**: OpenAI Vision API for image analysis
+- **UI Framework**: Tailwind CSS with shadcn/ui components
+- **State Management**: Zustand for client-side state
+
+## Data Models
+- **User**: Authentication and profile information
+- **Project**: Analysis projects and metadata
+- **Analysis**: Screenshot analysis results and specifications
+- **Component**: Detected UI components and their properties
+- **CodeGeneration**: Generated code snippets and templates
+
+## APIs and Integrations
+- **OpenAI Vision API**: Image analysis and component detection
+- **File Upload**: Multer for handling image uploads
+- **Authentication**: NextAuth.js with OAuth providers
+- **Database**: Prisma client for data persistence
+
+## Infrastructure Requirements
+- **Development**: Local development with hot reloading
+- **Production**: Vercel deployment with environment variables
+- **File Storage**: Local storage for development, cloud storage for production
+- **Database**: SQLite for development, managed database for production
+
+# Development Roadmap  
+## Phase 1: Foundation & Core Analysis (MVP)
+- User authentication system with NextAuth.js
+- Basic screenshot upload functionality
+- OpenAI Vision API integration for image analysis
+- Simple analysis results display
+- Basic project management dashboard
+
+## Phase 2: Enhanced Analysis & Code Generation
+- Advanced component detection and classification
+- Detailed technical specification generation
+- Basic code generation for Next.js components
+- Improved analysis accuracy and detail
+- Export functionality for analysis results
+
+## Phase 3: UI Agent & Automation
+- Automated application testing system
+- Accessibility auditing and recommendations
+- Visual regression testing capabilities
+- Performance analysis tools
+- Batch processing for multiple screenshots
+
+## Phase 4: Advanced Features & Polish
+- Advanced code generation with multiple frameworks
+- Collaboration features and team management
+- Advanced export options (PDF, documentation)
+- Integration with design tools (Figma, Sketch)
+- Mobile application analysis capabilities
+
+## Phase 5: Enterprise & Scale
+- Multi-tenant architecture
+- Advanced analytics and reporting
+- API access for third-party integrations
+- Enterprise security features
+- Advanced AI models and custom training
+
+# Logical Dependency Chain
+## Foundation First (Phase 1)
+1. **Authentication System**: Essential for user management and project isolation
+2. **Database Schema**: Core data models for users, projects, and analyses
+3. **Basic Upload System**: File handling and storage infrastructure
+4. **AI Integration**: OpenAI Vision API setup and basic image analysis
+5. **Simple Dashboard**: Basic project management and results display
+
+## Build Upon Foundation (Phase 2)
+1. **Enhanced Analysis**: Improve AI analysis accuracy and detail
+2. **Code Generation**: Build upon analysis results to generate code
+3. **Export System**: Allow users to save and share results
+4. **UI Improvements**: Better user experience and interface design
+
+## Automation & Intelligence (Phase 3)
+1. **UI Agent System**: Automated testing and analysis capabilities
+2. **Accessibility Features**: Built upon existing analysis for comprehensive auditing
+3. **Performance Tools**: Leverage existing infrastructure for performance analysis
+
+## Advanced Capabilities (Phase 4-5)
+1. **Multiple Frameworks**: Extend code generation beyond Next.js
+2. **Collaboration**: Build upon user system for team features
+3. **Enterprise Features**: Scale existing features for larger organizations
+
+# Risks and Mitigations  
+## Technical Challenges
+- **AI Analysis Accuracy**: Risk of inaccurate component detection
+  - Mitigation: Implement human review and correction capabilities
+- **Code Generation Quality**: Risk of generating non-functional code
+  - Mitigation: Include testing and validation in generated code
+- **Performance**: Risk of slow analysis with large images
+  - Mitigation: Implement image optimization and caching
+
+## MVP Scope Management
+- **Feature Creep**: Risk of adding too many features too quickly
+  - Mitigation: Focus on core analysis and basic code generation first
+- **Complexity**: Risk of over-engineering the solution
+  - Mitigation: Start with simple, working features and iterate
+
+## Resource Constraints
+- **API Costs**: Risk of high OpenAI API usage costs
+  - Mitigation: Implement usage limits and cost monitoring
+- **Development Time**: Risk of underestimating development complexity
+  - Mitigation: Break down features into smaller, manageable tasks
+
+# Appendix  
+## Research Findings
+- Modern web applications require rapid prototyping and analysis
+- AI-powered tools significantly reduce development time
+- There's a gap in the market for comprehensive application analysis tools
+- Next.js and React are the most popular frameworks for modern web development
+
+## Technical Specifications
+- **Frontend Framework**: Next.js 15 with App Router
+- **UI Components**: shadcn/ui with Tailwind CSS
+- **Database**: Prisma ORM with SQLite/PostgreSQL
+- **Authentication**: NextAuth.js
+- **AI Integration**: OpenAI Vision API
+- **Deployment**: Vercel platform
+- **Testing**: Playwright for end-to-end testing
+</PRD>

@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-08-21T23:53:23.072Z",
+  "consoleErrors": [],
+  "accessibility": {
+    "missingAltText": 0,
+    "missingLabels": 0
+  },
+  "pages": [
+    {
+      "url": "http://localhost:3001",
+      "title": "App Cloner - Turn Screenshots into Code",
+      "screenshot": "home-screenshot.png"
+    },
+    {
+      "url": "http://localhost:3001/create",
+      "screenshot": "create-screenshot.png"
+    }
+  ]
+}
