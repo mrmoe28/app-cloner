@@ -33,7 +33,6 @@ ui-agent/
 
 # Package files
 package 2.json
-pnpm-lock.yaml
 
 # Cache directories
 .next/cache/
