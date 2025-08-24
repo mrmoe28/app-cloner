@@ -9,17 +9,5 @@
       "maxDuration": 60
     }
   },
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
-  "excludes": [
-    "README.md",
-    "**/README.md",
-    "*.md",
-    "**/*.md",
-    "!**/CHANGELOG.md",
-    "docs/**",
-    "tests/**",
-    "test/**",
-    "__tests__/**",
-    "coverage/**"
-  ]
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./"
 }
