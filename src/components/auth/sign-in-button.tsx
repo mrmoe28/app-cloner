@@ -10,11 +10,16 @@ interface SignInButtonProps {
 }
 
 export function SignInButton({ variant = 'default', size = 'default' }: SignInButtonProps) {
+  const handleSignIn = () => {
+    console.log('SignInButton: Initiating sign-in with callback to /dashboard');
+    signIn(undefined, { callbackUrl: '/dashboard' });
+  };
+
   return (
     <Button
       variant={variant}
       size={size}
-      onClick={() => signIn()}
+      onClick={handleSignIn}
       className="gap-2"
     >
       <LogIn className="h-4 w-4" />
