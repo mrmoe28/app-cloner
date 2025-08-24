@@ -77,16 +77,29 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     async redirect({ url, baseUrl }) {
-      // If it's a relative URL, return dashboard
+      console.log('NextAuth redirect callback:', { url, baseUrl });
+      
+      // If it's a relative URL starting with /, use it or default to dashboard
       if (url.startsWith('/')) {
-        return url === '/' ? `${baseUrl}/dashboard` : url;
+        const targetUrl = url === '/' ? `${baseUrl}/dashboard` : `${baseUrl}${url}`;
+        console.log('Relative URL redirect:', targetUrl);
+        return targetUrl;
       }
-      // If it's the same origin, allow it (for callback URLs)
-      if (new URL(url).origin === baseUrl) {
-        return url;
+      
+      // If it's the same origin, allow it
+      try {
+        if (new URL(url).origin === baseUrl) {
+          console.log('Same origin redirect:', url);
+          return url;
+        }
+      } catch (e) {
+        console.error('Error parsing URL:', e);
       }
+      
       // Default to dashboard
-      return `${baseUrl}/dashboard`;
+      const dashboardUrl = `${baseUrl}/dashboard`;
+      console.log('Default dashboard redirect:', dashboardUrl);
+      return dashboardUrl;
     },
     async session({ session, token, user }) {
       if (session?.user) {
