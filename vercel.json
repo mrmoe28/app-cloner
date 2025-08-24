@@ -2,11 +2,24 @@
   "framework": "nextjs",
   "buildCommand": "pnpm build",
   "devCommand": "pnpm dev",
-  "installCommand": "pnpm install",
+  "installCommand": "pnpm install --frozen-lockfile",
   "regions": ["iad1"],
   "functions": {
     "src/app/api/**": {
       "maxDuration": 60
     }
-  }
+  },
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
+  "excludes": [
+    "README.md",
+    "**/README.md",
+    "*.md",
+    "**/*.md",
+    "!**/CHANGELOG.md",
+    "docs/**",
+    "tests/**",
+    "test/**",
+    "__tests__/**",
+    "coverage/**"
+  ]
 }
