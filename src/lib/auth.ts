@@ -76,6 +76,18 @@ export const authOptions: NextAuthOptions = {
       // Allow sign in for all providers
       return true;
     },
+    async redirect({ url, baseUrl }) {
+      // If it's a relative URL, return dashboard
+      if (url.startsWith('/')) {
+        return url === '/' ? `${baseUrl}/dashboard` : url;
+      }
+      // If it's the same origin, allow it (for callback URLs)
+      if (new URL(url).origin === baseUrl) {
+        return url;
+      }
+      // Default to dashboard
+      return `${baseUrl}/dashboard`;
+    },
     async session({ session, token, user }) {
       if (session?.user) {
         session.user.id = token.sub || user?.id || '';
