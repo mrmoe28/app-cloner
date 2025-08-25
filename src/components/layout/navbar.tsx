@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { SignInButton } from '@/components/auth/sign-in-button';
 import { UserMenu } from '@/components/auth/user-menu';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Code, Upload, Menu, X, Sparkles } from 'lucide-react';
 
@@ -55,6 +56,7 @@ export function Navbar() {
 
         {/* Desktop Auth */}
         <div className="hidden md:flex items-center space-x-2">
+          <ThemeToggle />
           {status === 'loading' ? (
             <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
           ) : session?.user ? (
@@ -66,6 +68,9 @@ export function Navbar() {
 
         {/* Mobile Menu */}
         <div className="flex md:hidden items-center space-x-2">
+          {/* Theme Toggle for Mobile */}
+          <ThemeToggle />
+          
           {/* Quick Upload Button for Mobile */}
           {session?.user && (
             <Button asChild variant="ghost" size="sm" className="p-2">
