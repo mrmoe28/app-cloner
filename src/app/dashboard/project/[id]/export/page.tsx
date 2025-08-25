@@ -65,29 +65,116 @@ export default function ProjectExportPage() {
     );
   }
 
+  const createZipFile = async () => {
+    const JSZip = (await import('jszip')).default;
+    const zip = new JSZip();
+    
+    // Add project files to zip
+    if (project.generatedCode?.files) {
+      project.generatedCode.files.forEach(file => {
+        zip.file(file.name, file.content);
+      });
+    }
+    
+    // Add package.json
+    const packageJson = {
+      name: project.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      version: '1.0.0',
+      description: project.description || 'Generated with App Cloner',
+      main: 'index.js',
+      scripts: {
+        start: 'npm run dev',
+        dev: 'next dev',
+        build: 'next build',
+        lint: 'eslint .'
+      },
+      dependencies: {
+        react: '^19.0.0',
+        'react-dom': '^19.0.0',
+        next: '^15.0.0'
+      }
+    };
+    zip.file('package.json', JSON.stringify(packageJson, null, 2));
+    
+    // Add README.md
+    const readme = `# ${project.name}
+
+Generated with App Cloner
+
+## Description
+${project.description || 'No description provided'}
+
+## Getting Started
+
+1. Install dependencies:
+\`\`\`bash
+npm install
+\`\`\`
+
+2. Run the development server:
+\`\`\`bash
+npm run dev
+\`\`\`
+
+3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Generated Files
+${project.generatedCode?.files?.map(f => `- ${f.name}`).join('\n') || 'No files generated'}
+
+## Platform
+- **Platform**: ${project.analysis?.platformDetection?.platform || 'Unknown'}
+- **Framework**: ${project.generatedCode?.framework || 'Unknown'}
+- **Components**: ${project.analysis?.components?.length || 0}
+
+Generated on ${new Date().toLocaleDateString()}
+`;
+    zip.file('README.md', readme);
+    
+    return zip;
+  };
+
+  const downloadZip = async (zip: any) => {
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${project.name.replace(/[^a-zA-Z0-9]/g, '-')}.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const handleExport = async (format: 'zip' | 'github' | 'deploy') => {
     setIsExporting(true);
     setExportStatus(null);
     
     try {
-      // Simulate export process
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
       switch (format) {
         case 'zip':
+          const zip = await createZipFile();
+          await downloadZip(zip);
           setExportStatus('ZIP file downloaded successfully');
-          // In a real implementation, this would trigger a file download
           break;
         case 'github':
-          setExportStatus('Repository created on GitHub');
-          // In a real implementation, this would create a GitHub repo
+          // Create ZIP and redirect to GitHub for manual repository creation
+          const zip = await createZipFile();
+          await downloadZip(zip);
+          
+          // Open GitHub new repository page
+          const repoName = project.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+          const githubNewRepoUrl = `https://github.com/new?name=${repoName}&description=${encodeURIComponent(project.description || 'Generated with App Cloner')}`;
+          window.open(githubNewRepoUrl, '_blank');
+          
+          setExportStatus('ZIP downloaded! GitHub repository page opened - upload the files to create your repo.');
           break;
         case 'deploy':
-          setExportStatus('Project deployed to Vercel');
+          setExportStatus('Deploy functionality coming soon');
           // In a real implementation, this would deploy to a platform
           break;
       }
     } catch (error) {
+      console.error('Export error:', error);
       setExportStatus('Export failed. Please try again.');
     } finally {
       setIsExporting(false);
@@ -106,9 +193,9 @@ export default function ProjectExportPage() {
     {
       id: 'github',
       title: 'Export to GitHub',
-      description: 'Create a new repository on GitHub with your generated code',
+      description: 'Download ZIP and open GitHub to create a new repository',
       icon: Github,
-      action: 'Create Repository',
+      action: 'Export to GitHub',
       recommended: true
     },
     {
