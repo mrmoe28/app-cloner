@@ -158,8 +158,8 @@ Generated on ${new Date().toLocaleDateString()}
           break;
         case 'github':
           // Create ZIP and redirect to GitHub for manual repository creation
-          const zip = await createZipFile();
-          await downloadZip(zip);
+          const githubZip = await createZipFile();
+          await downloadZip(githubZip);
           
           // Open GitHub new repository page
           const repoName = project.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
