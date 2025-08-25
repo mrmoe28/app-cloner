@@ -28,7 +28,12 @@ export default function ProjectExportPage() {
   const projectId = params.id as string;
   const project = getProject(projectId);
 
-  if (!project || !project.generatedCode) {
+  // Debug logging
+  console.log('Project data:', project);
+  console.log('Generated code:', project?.generatedCode);
+  console.log('Generated files:', project?.generatedCode?.files);
+
+  if (!project) {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
@@ -70,10 +75,33 @@ export default function ProjectExportPage() {
     const zip = new JSZip();
     
     // Add project files to zip
-    if (project.generatedCode?.files) {
+    if (project.generatedCode?.files && project.generatedCode.files.length > 0) {
       project.generatedCode.files.forEach(file => {
-        zip.file(file.name, file.content);
+        if (file.name && file.content) {
+          zip.file(file.name, file.content);
+        }
       });
+    } else {
+      // Add placeholder files if no generated code exists
+      zip.file('index.js', `// Generated with App Cloner
+// This is a placeholder file - code generation may not have completed yet
+
+console.log('Hello from ${project.name}!');
+`);
+      zip.file('components/placeholder.jsx', `// Placeholder component
+// Actual components will be generated after AI analysis completes
+
+import React from 'react';
+
+export default function PlaceholderComponent() {
+  return (
+    <div>
+      <h1>${project.name}</h1>
+      <p>Generated with App Cloner</p>
+    </div>
+  );
+}
+`);
     }
     
     // Add package.json
@@ -119,7 +147,10 @@ npm run dev
 3. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Generated Files
-${project.generatedCode?.files?.map(f => `- ${f.name}`).join('\n') || 'No files generated'}
+${project.generatedCode?.files && project.generatedCode.files.length > 0 
+  ? project.generatedCode.files.filter(f => f.name).map(f => `- ${f.name}`).join('\n')
+  : '- index.js (placeholder)\n- components/placeholder.jsx (placeholder)\n\n*Note: Complete code generation may not have finished yet*'
+}
 
 ## Platform
 - **Platform**: ${project.analysis?.platformDetection?.platform || 'Unknown'}
@@ -232,6 +263,26 @@ Generated on ${new Date().toLocaleDateString()}
           </Link>
         </Button>
       </div>
+
+      {/* Warning for incomplete code generation */}
+      {(!project.generatedCode?.files || project.generatedCode.files.length === 0) && (
+        <Card className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              <div className="space-y-1">
+                <p className="font-medium text-amber-800 dark:text-amber-200">
+                  Code Generation Not Complete
+                </p>
+                <p className="text-sm text-amber-700 dark:text-amber-300">
+                  Your project hasn't finished code generation yet. The ZIP will contain placeholder files. 
+                  Complete the analysis and generation steps for full code export.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Export Status */}
       {exportStatus && (
