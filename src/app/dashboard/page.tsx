@@ -287,7 +287,11 @@ export default function DashboardPage() {
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {userProjects
-                .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+                .sort((a, b) => {
+                  const dateA = new Date(a.updatedAt || a.createdAt).getTime();
+                  const dateB = new Date(b.updatedAt || b.createdAt).getTime();
+                  return dateB - dateA;
+                })
                 .slice(0, 6)
                 .map((project) => (
                   <ProjectCard key={project.id} project={project} />

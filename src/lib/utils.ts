@@ -161,9 +161,16 @@ export function getContrastColor(hexColor: string): string {
 }
 
 // Time utilities
-export function formatRelativeTime(date: Date): string {
+export function formatRelativeTime(date: Date | string): string {
   const now = new Date();
-  const diff = now.getTime() - date.getTime();
+  const targetDate = typeof date === 'string' ? new Date(date) : date;
+  
+  // Check if date is valid
+  if (isNaN(targetDate.getTime())) {
+    return 'Unknown';
+  }
+  
+  const diff = now.getTime() - targetDate.getTime();
   
   const seconds = Math.floor(diff / 1000);
   const minutes = Math.floor(seconds / 60);

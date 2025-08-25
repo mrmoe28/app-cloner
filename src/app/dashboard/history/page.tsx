@@ -51,7 +51,11 @@ export default function HistoryPage() {
     const matchesFilter = filterStatus === 'all' || project.status === filterStatus;
     
     return matchesSearch && matchesFilter;
-  }).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }).sort((a, b) => {
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
+    return dateB - dateA;
+  });
 
   const handleDelete = async (projectId: string, projectName: string) => {
     if (!confirm(`Are you sure you want to delete "${projectName}"? This action cannot be undone.`)) {
