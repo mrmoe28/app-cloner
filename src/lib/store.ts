@@ -13,6 +13,7 @@ interface AppStore extends AppState {
   addProject: (project: Project) => void;
   updateProject: (projectId: string, updates: Partial<Project>) => void;
   deleteProject: (projectId: string) => void;
+  getProject: (projectId: string) => Project | undefined;
   setProjectAnalysis: (projectId: string, analysis: AnalysisResult) => void;
   setProjectGeneratedCode: (projectId: string, generatedCode: GeneratedCode) => void;
   clearError: () => void;
@@ -91,6 +92,11 @@ export const useAppStore = create<AppStore>()(
             'deleteProject'
           ),
 
+        getProject: (projectId) => {
+          const state = get();
+          return state.projects.find((p) => p.id === projectId);
+        },
+
         setProjectAnalysis: (projectId, analysis) =>
           set(
             (state) => {
@@ -158,6 +164,7 @@ export const useAppStore = create<AppStore>()(
 // Selectors for better performance
 export const useCurrentProject = () => useAppStore((state) => state.currentProject);
 export const useProjects = () => useAppStore((state) => state.projects);
+export const useProject = (projectId: string) => useAppStore((state) => state.getProject(projectId));
 export const useIsAnalyzing = () => useAppStore((state) => state.isAnalyzing);
 export const useIsGenerating = () => useAppStore((state) => state.isGenerating);
 export const useAnalysisProgress = () => useAppStore((state) => state.analysisProgress);

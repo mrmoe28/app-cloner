@@ -73,8 +73,15 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Allow sign in for all providers
-      return true;
+      console.log('NextAuth signIn callback:', { user: user?.email, account: account?.provider, profile: profile?.name });
+      
+      try {
+        // Allow sign in for all providers
+        return true;
+      } catch (error) {
+        console.error('SignIn callback error:', error);
+        return false;
+      }
     },
     async redirect({ url, baseUrl }) {
       console.log('NextAuth redirect callback:', { url, baseUrl });
@@ -101,44 +108,20 @@ export const authOptions: NextAuthOptions = {
       console.log('Default dashboard redirect:', dashboardUrl);
       return dashboardUrl;
     },
-    async session({ session, token, user }) {
-      if (session?.user) {
-        session.user.id = token.sub || user?.id || '';
-        
-        // Add additional user data to session
-        if (token) {
-          session.user.name = token.name as string;
-          session.user.email = token.email as string;
-          session.user.image = token.picture as string;
-        }
+    async session({ session, user }) {
+      console.log('Session callback:', { session, user });
+      if (session?.user && user) {
+        session.user.id = user.id;
+        session.user.name = user.name;
+        session.user.email = user.email;
+        session.user.image = user.image;
       }
+      console.log('Session callback result:', session);
       return session;
-    },
-    async jwt({ token, user, account, profile }) {
-      if (user) {
-        token.uid = user.id;
-        token.name = user.name;
-        token.email = user.email;
-        token.picture = user.image;
-      }
-      
-      // Update token with OAuth profile data
-      if (account && profile) {
-        if (account.provider === 'google' && profile) {
-          token.name = profile.name;
-          token.picture = profile.picture;
-        }
-        if (account.provider === 'github' && profile) {
-          token.name = profile.name || profile.login;
-          token.picture = profile.avatar_url;
-        }
-      }
-      
-      return token;
     },
   },
   session: {
-    strategy: 'jwt',
+    strategy: 'database',
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {

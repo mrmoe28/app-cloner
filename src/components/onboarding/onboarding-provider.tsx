@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { OnboardingTour } from './tour';
-import { FloatingHelp } from './floating-help';
 
 interface OnboardingContextType {
   isTourOpen: boolean;
@@ -76,8 +75,6 @@ export function OnboardingProvider({ children }: OnboardingProviderProps) {
         onComplete={completeTour}
       />
       
-      {/* Floating help button */}
-      <FloatingHelp onStartTour={startTour} />
     </OnboardingContext.Provider>
   );
 }

@@ -1,6 +1,8 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { SignInButton } from '@/components/auth/sign-in-button';
 import { useProjects } from '@/lib/store';
 import { formatRelativeTime, getPlatformDisplayName, getFrameworkDisplayName } from '@/lib/utils';
-import { Plus, Upload, Clock, Code2, Loader2, Eye } from 'lucide-react';
+import { Plus, Upload, Clock, Code2, Loader2, Eye, Sparkles, Zap } from 'lucide-react';
 import Image from 'next/image';
 
 function ProjectCard({ project }: { project: any }) {
@@ -106,14 +108,23 @@ function ProjectCard({ project }: { project: any }) {
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const projects = useProjects();
+
+  // Handle successful authentication redirect
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user) {
+      console.log('User authenticated successfully:', session.user.email);
+    }
+  }, [status, session]);
 
   // Show loading state
   if (status === 'loading') {
     return (
       <div className="container max-w-6xl mx-auto py-12">
-        <div className="flex items-center justify-center py-24">
-          <Loader2 className="h-8 w-8 animate-spin" />
+        <div className="flex flex-col items-center justify-center py-24 space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Loading your workspace...</p>
         </div>
       </div>
     );
@@ -123,15 +134,24 @@ export default function DashboardPage() {
   if (!session?.user) {
     return (
       <div className="container max-w-4xl mx-auto py-12">
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle>Welcome to App Cloner</CardTitle>
-            <CardDescription>
-              Sign in to view your projects and start cloning app interfaces
+        <Card className="border-2 border-dashed border-muted">
+          <CardHeader className="text-center pb-6">
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Sparkles className="w-8 h-8 text-primary" />
+            </div>
+            <CardTitle className="text-2xl">Welcome to App Cloner</CardTitle>
+            <CardDescription className="text-base">
+              Transform any app screenshot into production-ready code using advanced AI. 
+              Sign in to access your projects and start building.
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex justify-center">
-            <SignInButton />
+          <CardContent className="text-center pb-8">
+            <div className="space-y-4">
+              <SignInButton size="lg" />
+              <p className="text-sm text-muted-foreground">
+                Supports Google, GitHub, and email authentication
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -142,17 +162,26 @@ export default function DashboardPage() {
   const userProjects = projects.filter(p => p.userId === session.user.id);
 
   return (
-    <div className="container max-w-6xl mx-auto py-12">
+    <div className="container max-w-6xl mx-auto py-8">
       <div className="space-y-8">
-        {/* Header */}
+        {/* Welcome Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-            <p className="text-gray-500 dark:text-gray-400">
-              Manage your app cloning projects
-            </p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center">
+                <Zap className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">
+                  Welcome back{session.user.name ? `, ${session.user.name.split(' ')[0]}` : ''}!
+                </h1>
+                <p className="text-muted-foreground">
+                  Transform app screenshots into production-ready code with AI
+                </p>
+              </div>
+            </div>
           </div>
-          <Button asChild className="gap-2">
+          <Button asChild size="lg" className="gap-2 shadow-lg">
             <Link href="/create">
               <Plus className="w-4 h-4" />
               New Project
@@ -161,51 +190,74 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="border-0 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/50 dark:to-blue-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
-              <Code2 className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-blue-900 dark:text-blue-100">Total Projects</CardTitle>
+              <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                <Code2 className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{userProjects.length}</div>
+              <div className="text-2xl font-bold text-blue-900 dark:text-blue-100">{userProjects.length}</div>
+              <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                {userProjects.length === 0 ? 'Start your first project' : 'Projects created'}
+              </p>
             </CardContent>
           </Card>
-          <Card>
+          
+          <Card className="border-0 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/50 dark:to-green-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Completed</CardTitle>
-              <Eye className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-green-900 dark:text-green-100">Completed</CardTitle>
+              <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+                <Eye className="h-4 w-4 text-green-600 dark:text-green-400" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-green-900 dark:text-green-100">
                 {userProjects.filter(p => p.status === 'completed').length}
               </div>
+              <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                Ready for production
+              </p>
             </CardContent>
           </Card>
-          <Card>
+          
+          <Card className="border-0 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/50 dark:to-orange-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">In Progress</CardTitle>
-              <Loader2 className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-orange-900 dark:text-orange-100">In Progress</CardTitle>
+              <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                <Loader2 className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-orange-900 dark:text-orange-100">
                 {userProjects.filter(p => 
                   ['analyzing', 'generating'].includes(p.status)
                 ).length}
               </div>
+              <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">
+                AI processing...
+              </p>
             </CardContent>
           </Card>
-          <Card>
+          
+          <Card className="border-0 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/50 dark:to-purple-900/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Ready to Start</CardTitle>
-              <Upload className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-purple-900 dark:text-purple-100">Ready to Start</CardTitle>
+              <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                <Upload className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-purple-900 dark:text-purple-100">
                 {userProjects.filter(p => 
                   ['uploaded', 'analyzed'].includes(p.status)
                 ).length}
               </div>
+              <p className="text-xs text-purple-600 dark:text-purple-400 mt-1">
+                Awaiting action
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -224,23 +276,40 @@ export default function DashboardPage() {
           </div>
         ) : (
           /* Empty State */
-          <Card className="text-center py-12">
-            <CardContent className="space-y-4">
-              <div className="mx-auto w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                <Upload className="w-8 h-8 text-gray-400" />
+          <Card className="border-2 border-dashed border-muted text-center py-16">
+            <CardContent className="space-y-6">
+              <div className="mx-auto w-20 h-20 bg-gradient-to-br from-primary/10 to-primary/20 rounded-2xl flex items-center justify-center">
+                <Sparkles className="w-10 h-10 text-primary" />
               </div>
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold">No projects yet</h3>
-                <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-                  Upload your first app screenshot to start cloning interfaces with AI
+              <div className="space-y-3 max-w-md mx-auto">
+                <h3 className="text-xl font-semibold">Ready to start cloning?</h3>
+                <p className="text-muted-foreground">
+                  Upload any app screenshot and watch our AI transform it into production-ready code. 
+                  Supports React, React Native, Flutter, and more frameworks.
                 </p>
               </div>
-              <Button asChild className="gap-2">
-                <Link href="/create">
-                  <Plus className="w-4 h-4" />
-                  Create Your First Project
-                </Link>
-              </Button>
+              <div className="space-y-4">
+                <Button asChild size="lg" className="gap-2 shadow-lg">
+                  <Link href="/create">
+                    <Plus className="w-4 h-4" />
+                    Create Your First Project
+                  </Link>
+                </Button>
+                <div className="flex items-center gap-6 justify-center text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    AI-Powered
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    Multi-Platform
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                    Production-Ready
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}

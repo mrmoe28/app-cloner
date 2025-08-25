@@ -204,7 +204,9 @@ export function AdvancedImageUpload({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: accept.reduce((acc, type) => ({ ...acc, [type]: [] }), {}),
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.webp', '.bmp']
+    },
     maxSize: maxFileSize,
     multiple: false,
     disabled: disabled || isUploading,
