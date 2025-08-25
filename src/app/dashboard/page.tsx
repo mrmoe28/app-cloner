@@ -181,12 +181,20 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
-          <Button asChild size="lg" className="gap-2 shadow-lg">
-            <Link href="/create">
-              <Plus className="w-4 h-4" />
-              New Project
-            </Link>
-          </Button>
+          <div className="flex gap-3">
+            <Button asChild variant="outline" size="lg" className="gap-2">
+              <Link href="/dashboard/history">
+                <Eye className="w-4 h-4" />
+                View All Projects
+              </Link>
+            </Button>
+            <Button asChild size="lg" className="gap-2 shadow-lg">
+              <Link href="/create">
+                <Plus className="w-4 h-4" />
+                New Project
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -265,7 +273,15 @@ export default function DashboardPage() {
         {/* Projects Grid */}
         {userProjects.length > 0 ? (
           <div className="space-y-6">
-            <h2 className="text-xl font-semibold">Your Projects</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold">Your Projects</h2>
+              <Button asChild variant="ghost" size="sm" className="gap-2">
+                <Link href="/dashboard/history">
+                  <Eye className="w-4 h-4" />
+                  View All
+                </Link>
+              </Button>
+            </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {userProjects
                 .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
