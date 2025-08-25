@@ -1,7 +1,6 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -10,17 +9,22 @@ import { Badge } from '@/components/ui/badge';
 import { SignInButton } from '@/components/auth/sign-in-button';
 import { useProjects } from '@/lib/store';
 import { formatRelativeTime, getPlatformDisplayName, getFrameworkDisplayName } from '@/lib/utils';
-import { Plus, Upload, Clock, Code2, Loader2, Eye, Sparkles, Zap } from 'lucide-react';
+import { Plus, Clock, Code2, Loader2, Eye, Sparkles, Zap, History } from 'lucide-react';
 import Image from 'next/image';
 
 function ProjectCard({ project }: { project: any }) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
+      case 'generated':
         return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
       case 'generating':
       case 'analyzing':
         return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+      case 'analyzed':
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
+      case 'uploaded':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
       case 'failed':
         return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
       default:
@@ -108,7 +112,6 @@ function ProjectCard({ project }: { project: any }) {
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
-  const router = useRouter();
   const projects = useProjects();
 
   // Handle successful authentication redirect
@@ -184,7 +187,7 @@ export default function DashboardPage() {
           <div className="flex gap-3">
             <Button asChild variant="outline" size="lg" className="gap-2">
               <Link href="/dashboard/history">
-                <Eye className="w-4 h-4" />
+                <History className="w-4 h-4" />
                 View All Projects
               </Link>
             </Button>
@@ -223,7 +226,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-900 dark:text-green-100">
-                {userProjects.filter(p => p.status === 'completed').length}
+                {userProjects.filter(p => ['completed', 'generated'].includes(p.status)).length}
               </div>
               <p className="text-xs text-green-600 dark:text-green-400 mt-1">
                 Ready for production
@@ -254,7 +257,7 @@ export default function DashboardPage() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-purple-900 dark:text-purple-100">Ready to Start</CardTitle>
               <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                <Upload className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                <Sparkles className="h-4 w-4 text-purple-600 dark:text-purple-400" />
               </div>
             </CardHeader>
             <CardContent>
@@ -285,6 +288,7 @@ export default function DashboardPage() {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {userProjects
                 .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+                .slice(0, 6)
                 .map((project) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}
