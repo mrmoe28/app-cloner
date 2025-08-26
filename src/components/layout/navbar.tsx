@@ -7,10 +7,13 @@ import { SignInButton } from '@/components/auth/sign-in-button';
 import { UserMenu } from '@/components/auth/user-menu';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { Button } from '@/components/ui/button';
-import { Code, Upload, Menu, X, Sparkles } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { useSubscription } from '@/hooks/use-subscription';
+import { Code, Upload, Menu, X, Sparkles, Crown } from 'lucide-react';
 
 export function Navbar() {
   const { data: session, status } = useSession();
+  const { isSubscribed } = useSubscription();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -44,6 +47,17 @@ export function Navbar() {
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
           </Link>
           
+          {session?.user && !isSubscribed && (
+            <Link
+              href="/subscription"
+              className="text-sm font-medium transition-all duration-200 hover:text-primary hover:scale-105 relative group flex items-center gap-2"
+            >
+              <Crown className="h-4 w-4" />
+              Upgrade to Pro
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+            </Link>
+          )}
+          
           {session?.user && (
             <Button asChild variant="outline" size="sm" className="gap-2 button-hover border-primary/20 hover:bg-primary/5">
               <Link href="/create">
@@ -56,6 +70,12 @@ export function Navbar() {
 
         {/* Desktop Auth */}
         <div className="hidden md:flex items-center space-x-2">
+          {session?.user && isSubscribed && (
+            <Badge variant="secondary" className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-none">
+              <Crown className="h-3 w-3 mr-1" />
+              Pro
+            </Badge>
+          )}
           <ThemeToggle />
           {status === 'loading' ? (
             <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
@@ -140,8 +160,27 @@ export function Navbar() {
                     <span>New Project</span>
                   </Link>
                   
+                  {session?.user && !isSubscribed && (
+                    <Link
+                      href="/subscription"
+                      className="flex items-center space-x-3 text-lg font-medium transition-colors hover:text-primary"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Crown className="h-5 w-5 text-amber-500" />
+                      <span>Upgrade to Pro</span>
+                    </Link>
+                  )}
+                  
                   {session?.user && (
                     <div className="border-t pt-6">
+                      {isSubscribed && (
+                        <div className="mb-4">
+                          <Badge variant="secondary" className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-none">
+                            <Crown className="h-3 w-3 mr-1" />
+                            Pro Member
+                          </Badge>
+                        </div>
+                      )}
                       <Button asChild className="w-full gap-2 button-hover">
                         <Link href="/create" onClick={() => setIsOpen(false)}>
                           <Upload className="h-4 w-4" />
