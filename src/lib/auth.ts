@@ -103,10 +103,10 @@ export const authOptions: NextAuthOptions = {
         console.error('Error parsing URL:', e);
       }
       
-      // Default to subscription page after signin
-      const subscriptionUrl = `${baseUrl}/subscription`;
-      console.log('Default subscription redirect:', subscriptionUrl);
-      return subscriptionUrl;
+      // Default to dashboard page after signin
+      const dashboardUrl = `${baseUrl}/dashboard`;
+      console.log('Default dashboard redirect:', dashboardUrl);
+      return dashboardUrl;
     },
     async session({ session, user }) {
       console.log('Session callback:', { session, user });
