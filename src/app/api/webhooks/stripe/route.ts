@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
               data: {
                 stripeSubscriptionId: subscription.id,
                 stripePriceId: subscription.items.data[0]?.price.id,
-                stripeCurrentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
+                stripeCurrentPeriodEnd: new Date(subscription.current_period_end * 1000),
               },
             });
           }
@@ -49,13 +49,13 @@ export async function POST(req: NextRequest) {
       case 'invoice.payment_succeeded': {
         const invoice = event.data.object as Stripe.Invoice;
         
-        if ((invoice as any).subscription) {
-          const subscription = await stripe.subscriptions.retrieve((invoice as any).subscription as string);
+        if (invoice.subscription) {
+          const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
           
           await prisma.user.updateMany({
             where: { stripeSubscriptionId: subscription.id },
             data: {
-              stripeCurrentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
+              stripeCurrentPeriodEnd: new Date(subscription.current_period_end * 1000),
             },
           });
         }

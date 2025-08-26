@@ -42,7 +42,8 @@ export default function SignInPage() {
           variant: 'destructive',
         });
       } else if (result?.ok) {
-        router.push('/dashboard');
+        router.push('/subscription');
+        router.refresh();
       }
     } catch (error) {
       toast({
@@ -58,7 +59,7 @@ export default function SignInPage() {
   const handleSocialSignIn = async (provider: 'google' | 'github') => {
     try {
       setIsLoading(true);
-      await signIn(provider, { callbackUrl: '/dashboard' });
+      await signIn(provider, { callbackUrl: '/subscription' });
     } catch (error) {
       toast({
         title: 'Error',

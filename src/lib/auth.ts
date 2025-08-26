@@ -86,9 +86,9 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       console.log('NextAuth redirect callback:', { url, baseUrl });
       
-      // If it's a relative URL starting with /, use it or default to dashboard
+      // If it's a relative URL starting with /, use it
       if (url.startsWith('/')) {
-        const targetUrl = url === '/' ? `${baseUrl}/dashboard` : `${baseUrl}${url}`;
+        const targetUrl = `${baseUrl}${url}`;
         console.log('Relative URL redirect:', targetUrl);
         return targetUrl;
       }
@@ -103,10 +103,10 @@ export const authOptions: NextAuthOptions = {
         console.error('Error parsing URL:', e);
       }
       
-      // Default to dashboard
-      const dashboardUrl = `${baseUrl}/dashboard`;
-      console.log('Default dashboard redirect:', dashboardUrl);
-      return dashboardUrl;
+      // Default to subscription page after signin
+      const subscriptionUrl = `${baseUrl}/subscription`;
+      console.log('Default subscription redirect:', subscriptionUrl);
+      return subscriptionUrl;
     },
     async session({ session, user }) {
       console.log('Session callback:', { session, user });
@@ -126,7 +126,6 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/signin',
-    signUp: '/signup',
     error: '/auth/error',
   },
   secret: process.env.NEXTAUTH_SECRET,
