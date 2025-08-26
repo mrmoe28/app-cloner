@@ -116,35 +116,20 @@ export const authOptions: NextAuthOptions = {
       console.log('Default dashboard redirect:', dashboardUrl);
       return dashboardUrl;
     },
-    async jwt({ token, user, account }) {
-      console.log('JWT callback:', { token: !!token, user: user?.email, account: account?.provider });
-      
-      if (user) {
-        token.id = user.id;
-        token.name = user.name;
-        token.email = user.email;
-        token.image = user.image;
+    async session({ session, user }) {
+      console.log('Session callback:', { session, user });
+      if (session?.user && user) {
+        session.user.id = user.id;
+        session.user.name = user.name;
+        session.user.email = user.email;
+        session.user.image = user.image;
       }
-      
-      console.log('JWT callback result:', { id: token.id, email: token.email });
-      return token;
-    },
-    async session({ session, token }) {
-      console.log('Session callback:', { session: !!session, token: !!token });
-      
-      if (token && session.user) {
-        session.user.id = token.id as string;
-        session.user.name = token.name;
-        session.user.email = token.email;
-        session.user.image = token.image;
-      }
-      
-      console.log('Session callback result:', { id: session.user?.id, email: session.user?.email });
+      console.log('Session callback result:', session);
       return session;
     },
   },
   session: {
-    strategy: 'jwt',
+    strategy: 'database',
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
