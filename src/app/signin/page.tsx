@@ -59,14 +59,15 @@ export default function SignInPage() {
   const handleSocialSignIn = async (provider: 'google' | 'github') => {
     try {
       setIsLoading(true);
+      console.log(`Starting ${provider} OAuth signin with callbackUrl: /dashboard`);
       await signIn(provider, { callbackUrl: '/dashboard' });
     } catch (error) {
+      console.error('Social signin exception:', error);
       toast({
         title: 'Error',
         description: `Failed to sign in with ${provider}. Please try again.`,
         variant: 'destructive',
       });
-    } finally {
       setIsLoading(false);
     }
   };

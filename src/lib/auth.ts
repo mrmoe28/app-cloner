@@ -86,6 +86,12 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       console.log('NextAuth redirect callback:', { url, baseUrl });
       
+      // Prevent redirect loops by checking if we're already on signin page
+      if (url.includes('/signin') || url.includes('/api/auth/signin')) {
+        console.log('Preventing signin redirect loop, redirecting to dashboard');
+        return `${baseUrl}/dashboard`;
+      }
+      
       // If it's a relative URL starting with /, use it
       if (url.startsWith('/')) {
         const targetUrl = `${baseUrl}${url}`;
@@ -95,7 +101,9 @@ export const authOptions: NextAuthOptions = {
       
       // If it's the same origin, allow it
       try {
-        if (new URL(url).origin === baseUrl) {
+        const urlObj = new URL(url);
+        const baseUrlObj = new URL(baseUrl);
+        if (urlObj.origin === baseUrlObj.origin) {
           console.log('Same origin redirect:', url);
           return url;
         }
@@ -108,20 +116,35 @@ export const authOptions: NextAuthOptions = {
       console.log('Default dashboard redirect:', dashboardUrl);
       return dashboardUrl;
     },
-    async session({ session, user }) {
-      console.log('Session callback:', { session, user });
-      if (session?.user && user) {
-        session.user.id = user.id;
-        session.user.name = user.name;
-        session.user.email = user.email;
-        session.user.image = user.image;
+    async jwt({ token, user, account }) {
+      console.log('JWT callback:', { token: !!token, user: user?.email, account: account?.provider });
+      
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.image = user.image;
       }
-      console.log('Session callback result:', session);
+      
+      console.log('JWT callback result:', { id: token.id, email: token.email });
+      return token;
+    },
+    async session({ session, token }) {
+      console.log('Session callback:', { session: !!session, token: !!token });
+      
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.image = token.image;
+      }
+      
+      console.log('Session callback result:', { id: session.user?.id, email: session.user?.email });
       return session;
     },
   },
   session: {
-    strategy: 'database',
+    strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
