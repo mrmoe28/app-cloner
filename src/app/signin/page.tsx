@@ -23,12 +23,16 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Show loading while checking authentication
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
   // Redirect authenticated users to dashboard
-  useEffect(() => {
-    if (status === 'authenticated' && session) {
-      router.replace('/dashboard');
-    }
-  }, [status, session, router]);
+  if (status === 'authenticated' && session) {
+    router.replace('/dashboard');
+    return <div>Redirecting...</div>;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,23 +41,20 @@ export default function SignInPage() {
     try {
       setIsLoading(true);
       
+      // Use NextAuth's built-in redirect behavior
       const result = await signIn('credentials', {
         email,
         password,
-        redirect: false,
+        callbackUrl: '/dashboard',
       });
 
+      // If we get here, there was an error
       if (result?.error) {
         toast({
           title: 'Error',
           description: 'Invalid email or password. Please try again.',
           variant: 'destructive',
         });
-      } else if (result?.ok) {
-        // Add a small delay to ensure session is established
-        setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 100);
       }
     } catch (error) {
       console.error('Signin error:', error);
@@ -70,8 +71,8 @@ export default function SignInPage() {
   const handleSocialSignIn = async (provider: 'google' | 'github') => {
     try {
       setIsLoading(true);
-      // Let NextAuth handle the redirect through the redirect callback
-      await signIn(provider);
+      // Use NextAuth's built-in redirect with callbackUrl
+      await signIn(provider, { callbackUrl: '/dashboard' });
     } catch (error) {
       console.error(`${provider} signin error:`, error);
       toast({
