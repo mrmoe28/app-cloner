@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -17,10 +17,18 @@ import { FaGithub, FaGoogle } from 'react-icons/fa';
 export default function SignInPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { data: session, status } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      router.replace('/dashboard');
+    }
+  }, [status, session, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,10 +50,13 @@ export default function SignInPage() {
           variant: 'destructive',
         });
       } else if (result?.ok) {
-        router.push('/dashboard');
-        router.refresh();
+        // Add a small delay to ensure session is established
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 100);
       }
     } catch (error) {
+      console.error('Signin error:', error);
       toast({
         title: 'Error',
         description: 'Something went wrong. Please try again.',
@@ -59,14 +70,15 @@ export default function SignInPage() {
   const handleSocialSignIn = async (provider: 'google' | 'github') => {
     try {
       setIsLoading(true);
-      await signIn(provider, { callbackUrl: '/dashboard' });
+      // Let NextAuth handle the redirect through the redirect callback
+      await signIn(provider);
     } catch (error) {
+      console.error(`${provider} signin error:`, error);
       toast({
         title: 'Error',
         description: `Failed to sign in with ${provider}. Please try again.`,
         variant: 'destructive',
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -220,7 +232,7 @@ export default function SignInPage() {
             {/* Features Preview */}
             <div className="pt-4 border-t">
               <p className="text-xs text-muted-foreground text-center mb-3">
-                What you'll get access to:
+                What you&apos;ll get access to:
               </p>
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div className="flex items-center gap-2">
@@ -247,7 +259,7 @@ export default function SignInPage() {
         {/* Footer Links */}
         <div className="text-center space-y-2">
           <p className="text-sm text-muted-foreground">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/signup" className="text-primary hover:underline font-medium">
               Sign up for free
             </Link>

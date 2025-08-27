@@ -73,7 +73,13 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log('NextAuth signIn callback:', { user: user?.email, account: account?.provider, profile: profile?.name });
+      if (process.env.NODE_ENV === 'development') {
+        console.log('NextAuth signIn callback:', { 
+          user: user?.email, 
+          account: account?.provider, 
+          profile: profile?.name 
+        });
+      }
       
       try {
         // Allow sign in for all providers
@@ -84,47 +90,86 @@ export const authOptions: NextAuthOptions = {
       }
     },
     async redirect({ url, baseUrl }) {
-      console.log('NextAuth redirect callback:', { url, baseUrl });
-      
-      // Prevent redirect loops by checking if we're already on signin page
-      if (url.includes('/signin') || url.includes('/api/auth/signin')) {
-        console.log('Preventing signin redirect loop, redirecting to dashboard');
-        return `${baseUrl}/dashboard`;
+      if (process.env.NODE_ENV === 'development') {
+        console.log('NextAuth redirect callback:', { url, baseUrl });
       }
       
-      // If it's a relative URL starting with /, use it
-      if (url.startsWith('/')) {
-        const targetUrl = `${baseUrl}${url}`;
-        console.log('Relative URL redirect:', targetUrl);
-        return targetUrl;
+      // Always redirect to dashboard after successful signin
+      // This prevents loops and ensures consistent behavior
+      if (url.includes('/api/auth/signin') || url.includes('/signin')) {
+        const dashboardUrl = `${baseUrl}/dashboard`;
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Redirecting from signin to dashboard:', dashboardUrl);
+        }
+        return dashboardUrl;
       }
       
-      // If it's the same origin, allow it
+      // For callback URLs, redirect to dashboard
+      if (url.includes('/api/auth/callback')) {
+        const dashboardUrl = `${baseUrl}/dashboard`;
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Redirecting from callback to dashboard:', dashboardUrl);
+        }
+        return dashboardUrl;
+      }
+      
+      // Handle relative URLs that start with /
+      if (url.startsWith('/') && !url.startsWith('//')) {
+        // Only allow safe internal paths
+        const safePaths = ['/dashboard', '/profile', '/create', '/subscription'];
+        const pathMatch = safePaths.some(path => url.startsWith(path));
+        
+        if (pathMatch) {
+          const targetUrl = `${baseUrl}${url}`;
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Allowing safe relative URL redirect:', targetUrl);
+          }
+          return targetUrl;
+        }
+        
+        // Default to dashboard for unsafe paths
+        const dashboardUrl = `${baseUrl}/dashboard`;
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Unsafe relative URL, redirecting to dashboard:', dashboardUrl);
+        }
+        return dashboardUrl;
+      }
+      
+      // Handle absolute URLs - only allow same origin
       try {
         const urlObj = new URL(url);
         const baseUrlObj = new URL(baseUrl);
+        
         if (urlObj.origin === baseUrlObj.origin) {
-          console.log('Same origin redirect:', url);
-          return url;
+          // Additional safety check for allowed paths
+          const safePaths = ['/dashboard', '/profile', '/create', '/subscription'];
+          const pathMatch = safePaths.some(path => urlObj.pathname.startsWith(path));
+          
+          if (pathMatch) {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Allowing safe same-origin redirect:', url);
+            }
+            return url;
+          }
         }
       } catch (e) {
-        console.error('Error parsing URL:', e);
+        console.error('Error parsing URL in redirect callback:', e);
       }
       
-      // Default to dashboard page after signin
+      // Default fallback - always go to dashboard
       const dashboardUrl = `${baseUrl}/dashboard`;
-      console.log('Default dashboard redirect:', dashboardUrl);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Fallback redirect to dashboard:', dashboardUrl);
+      }
       return dashboardUrl;
     },
     async session({ session, user }) {
-      console.log('Session callback:', { session, user });
       if (session?.user && user) {
         session.user.id = user.id;
-        session.user.name = user.name;
-        session.user.email = user.email;
-        session.user.image = user.image;
+        session.user.name = user.name || session.user.name;
+        session.user.email = user.email || session.user.email;
+        session.user.image = user.image || session.user.image;
       }
-      console.log('Session callback result:', session);
       return session;
     },
   },

@@ -48,7 +48,7 @@ export default function ProjectPreviewPage() {
               <div className="space-y-2">
                 <h3 className="text-lg font-semibold">No Code Generated</h3>
                 <p className="text-gray-500">
-                  This project doesn't have any generated code yet. Generate code first to preview it here.
+                  This project doesn&apos;t have any generated code yet. Generate code first to preview it here.
                 </p>
               </div>
               <Button asChild>
@@ -204,7 +204,7 @@ export default function ProjectPreviewPage() {
                 <div className="space-y-2">
                   <h3 className="font-semibold">No Files Generated</h3>
                   <p className="text-gray-500 text-sm">
-                    The code generation process didn't create any files. This might be due to an error or incomplete analysis.
+                    The code generation process didn&apos;t create any files. This might be due to an error or incomplete analysis.
                   </p>
                 </div>
                 <Button asChild variant="outline">

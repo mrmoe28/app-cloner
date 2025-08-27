@@ -57,7 +57,7 @@ export default function ProjectSettingsPage() {
               <div className="space-y-2">
                 <h3 className="text-lg font-semibold">Project Not Found</h3>
                 <p className="text-gray-500">
-                  The project you're looking for doesn't exist or has been deleted.
+                  The project you&apos;re looking for doesn&apos;t exist or has been deleted.
                 </p>
               </div>
               <Button asChild>

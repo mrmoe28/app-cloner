@@ -195,7 +195,7 @@ export default function SubscriptionPage() {
           {/* Testimonial or Value Prop */}
           <div className="mt-16 text-center">
             <p className="text-lg text-muted-foreground mb-4">
-              "App Cloner saved us weeks of development time. We built our entire mobile app from mockups in just 2 days!"
+              &quot;App Cloner saved us weeks of development time. We built our entire mobile app from mockups in just 2 days!&quot;
             </p>
             <div className="flex items-center justify-center gap-2">
               <div className="flex">
@@ -212,7 +212,7 @@ export default function SubscriptionPage() {
             <h3 className="font-semibold mb-2">30-Day Money-Back Guarantee</h3>
             <p className="text-sm text-muted-foreground">
               Not satisfied? Get a full refund within 30 days, no questions asked. 
-              We're confident you'll love App Cloner Pro.
+              We&apos;re confident you&apos;ll love App Cloner Pro.
             </p>
           </div>
         </div>

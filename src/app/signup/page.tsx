@@ -376,7 +376,7 @@ export default function SignUpPage() {
             {/* What's Included */}
             <div className="pt-4 border-t">
               <p className="text-xs text-muted-foreground text-center mb-3">
-                What's included in your free account:
+                What&apos;s included in your free account:
               </p>
               <div className="space-y-2 text-xs">
                 <div className="flex items-center gap-2">

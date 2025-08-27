@@ -530,7 +530,7 @@ export default function AnalyzePage() {
                         </div>
                         {component.content && (
                           <div className="text-sm text-gray-500 mt-1">
-                            "{component.content}"
+                            &quot;{component.content}&quot;
                           </div>
                         )}
                       </div>

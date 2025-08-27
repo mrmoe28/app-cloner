@@ -78,7 +78,7 @@ export default function ProjectLayout({
       <div className="container max-w-6xl mx-auto py-12">
         <div className="text-center space-y-4">
           <h1 className="text-2xl font-bold">Project Not Found</h1>
-          <p className="text-gray-500">The project you're looking for doesn't exist.</p>
+          <p className="text-gray-500">The project you&apos;re looking for doesn&apos;t exist.</p>
           <Button asChild>
             <Link href="/dashboard">
               <ArrowLeft className="w-4 h-4 mr-2" />

@@ -55,7 +55,7 @@ export default function ProjectExportPage() {
               <div className="space-y-2">
                 <h3 className="text-lg font-semibold">No Code to Export</h3>
                 <p className="text-gray-500">
-                  This project doesn't have any generated code yet. Generate code first before exporting.
+                  This project doesn&apos;t have any generated code yet. Generate code first before exporting.
                 </p>
               </div>
               <Button asChild>
@@ -275,7 +275,7 @@ Generated on ${new Date().toLocaleDateString()}
                   Code Generation Not Complete
                 </p>
                 <p className="text-sm text-amber-700 dark:text-amber-300">
-                  Your project hasn't finished code generation yet. The ZIP will contain placeholder files. 
+                  Your project hasn&apos;t finished code generation yet. The ZIP will contain placeholder files. 
                   Complete the analysis and generation steps for full code export.
                 </p>
               </div>
@@ -420,7 +420,7 @@ Generated on ${new Date().toLocaleDateString()}
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <h4 className="font-medium">What's included:</h4>
+            <h4 className="font-medium">What&apos;s included:</h4>
             <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 ml-4">
               <li>• All generated source code files</li>
               <li>• Package configuration (package.json, etc.)</li>

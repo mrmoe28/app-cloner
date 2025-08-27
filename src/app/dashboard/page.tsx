@@ -117,7 +117,11 @@ export default function DashboardPage() {
   // Handle successful authentication redirect
   useEffect(() => {
     if (status === 'authenticated' && session?.user) {
-      console.log('User authenticated successfully:', session.user.email);
+      // Optional: Show welcome toast for successful signin
+      // This could be enhanced to show only on first signin or after redirect
+      if (process.env.NODE_ENV === 'development') {
+        console.log('User authenticated successfully:', session.user.email);
+      }
     }
   }, [status, session]);
 

@@ -48,34 +48,34 @@ export default function ProfilePage() {
       return;
     }
 
-    fetchProfile();
-  }, [status, router]);
-
-  const fetchProfile = async () => {
-    try {
-      const response = await fetch('/api/user/profile');
-      if (response.ok) {
-        const userProfile = await response.json();
-        setProfile(userProfile);
-        setName(userProfile.name || '');
-        setEmail(userProfile.email);
-      } else {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch('/api/user/profile');
+        if (response.ok) {
+          const userProfile = await response.json();
+          setProfile(userProfile);
+          setName(userProfile.name || '');
+          setEmail(userProfile.email);
+        } else {
+          toast({
+            title: 'Error',
+            description: 'Failed to load profile',
+            variant: 'destructive',
+          });
+        }
+      } catch (error) {
         toast({
           title: 'Error',
           description: 'Failed to load profile',
           variant: 'destructive',
         });
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to load profile',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
+
+    fetchProfile();
+  }, [status, router, toast, setProfile, setName, setEmail, setIsLoading]);
 
   const handleSave = async () => {
     if (!profile) return;
