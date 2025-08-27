@@ -12,7 +12,7 @@ export default function Home() {
       <section className="relative flex flex-col items-center justify-center px-4 py-24 text-center overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-indigo-50/50 dark:from-blue-950/20 dark:via-purple-950/10 dark:to-indigo-950/20"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.1),rgba(255,255,255,0))]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" aria-hidden="true"></div>
         
         <div className="relative space-y-8 max-w-5xl animate-fade-in">
           <Badge variant="outline" className="mb-6 animate-scale-in delay-100 bg-white/80 backdrop-blur-sm border-primary/20">
@@ -195,8 +195,8 @@ export default function Home() {
       {/* CTA Section */}
       <section className="px-4 py-24 bg-brand-gradient relative overflow-hidden">
         {/* Animated background elements */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.05),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent_50%)]" aria-hidden="true"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.05),transparent_50%)]" aria-hidden="true"></div>
         
         <div className="container mx-auto text-center relative z-10">
           <div className="max-w-3xl mx-auto text-white">

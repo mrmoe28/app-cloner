@@ -24,7 +24,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center space-x-2 group">
             <div className="relative">
               <Code className="h-6 w-6 text-primary transition-transform group-hover:scale-110" />
-              <div className="absolute -top-1 -right-1 h-2 w-2 bg-gradient-to-r from-primary to-accent rounded-full animate-pulse"></div>
+              <div className="absolute -top-1 -right-1 h-2 w-2 bg-gradient-to-r from-primary to-accent rounded-full animate-pulse" aria-hidden="true"></div>
             </div>
             <span className="font-bold text-lg text-brand-gradient">App Cloner</span>
           </Link>

@@ -96,7 +96,7 @@ export function FloatingHelp({ onStartTour, className }: FloatingHelpProps) {
 
       {/* Pulse animation for attention */}
       {!isExpanded && (
-        <div className="absolute inset-0 rounded-full bg-primary opacity-20 animate-ping" />
+        <div className="absolute inset-0 rounded-full bg-primary opacity-20 animate-ping" aria-hidden="true" />
       )}
     </div>
   );

@@ -9,7 +9,9 @@ export function AuthenticatedLayout({ children }: { children: React.ReactNode })
   return (
     <div className="relative flex min-h-screen flex-col">
       {session && <Navbar />}
-      <main className="flex-1">{children}</main>
+      <main className="flex-1" role="main" aria-label="Main content">
+        {children}
+      </main>
     </div>
   );
 }
